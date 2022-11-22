@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+	<AddIn Type="Application">
+		<Name>Application AMBRevitLibrary</Name>
+		<Assembly>AMBRevitLibrary.dll</Assembly>
+		<ClientId>02177AC9-1FC4-4150-959E-A28C28F8DD1A</ClientId>
+		<FullClassName>AMBRevitLibrary.MyApplication</FullClassName>
+		<Text>Hello</Text>
+		<Description>Add a ribbon panel to UI</Description>
+		<VisibilityMode>AlwaysVisible</VisibilityMode>
+		<VendorId>AJMQ</VendorId>
+		<VendorDescription>com.aizharjohnquindoza</VendorDescription>
+	</AddIn>
+</RevitAddIns>
