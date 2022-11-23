@@ -8,6 +8,7 @@ using Autodesk.Revit.Attributes;
 using Autodesk.Revit;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.DB;
+using System.Reflection.Emit;
 
 namespace AMBRevitLibrary
 {
@@ -62,8 +63,11 @@ namespace AMBRevitLibrary
                     //create line
                     var geomLine = Line.CreateBound(start, end);
 
+
                     //create wall
                     Wall.Create(doc, geomLine, firstLevel.Id, false);
+
+                    Wall.Create(doc, geomLine, firstLevel.Id, height, offset, false, true);
 
                     tr.Commit();
                 }
