@@ -146,7 +146,7 @@ namespace AMBRevitLibrary
                 "WallButton2",
                 "Button2",
                 Assembly.GetExecutingAssembly().Location,
-                "AMBRevitLibrary.CreateNewWall")
+                "AMBRevitLibrary.CreateNewWall2")
             {
                 ToolTip = "Short Description",
                 LongDescription = "Long Description",

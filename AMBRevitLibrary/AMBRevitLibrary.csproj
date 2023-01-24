@@ -55,8 +55,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Active.cs" />
     <Compile Include="CreateFloor.cs" />
     <Compile Include="CreateNewWall.cs" />
+    <Compile Include="CreateNewWall2.cs" />
     <Compile Include="CreateWall.cs" />
     <Compile Include="DeleteElement.cs" />
     <Compile Include="GridsAndLevels.cs" />

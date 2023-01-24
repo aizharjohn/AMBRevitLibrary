@@ -1,21 +1,21 @@
-﻿using Autodesk.Revit.Attributes;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using Autodesk.Revit.Exceptions;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Autodesk.Revit.Attributes;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using Autodesk.Revit.Exceptions;
+using System.Diagnostics;
+using System.Reflection.Emit;
+
 namespace AMBRevitLibrary
 {
     [Transaction(TransactionMode.Manual)]
-    public class CreateNewWall : IExternalCommand
+    public class CreateNewWall2 : IExternalCommand
     {
-        //public ElementId wallTypeId { get; private set; }
-
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             //get application
@@ -31,22 +31,14 @@ namespace AMBRevitLibrary
             //set unit to millimeters
             var unit = UnitTypeId.Millimeters;
 
-
-
             //grab all levels
             var colLevels = new FilteredElementCollector(doc)
                 .WhereElementIsNotElementType()
                 .OfCategory(BuiltInCategory.INVALID)
                 .OfClass(typeof(Level));
 
-            //test grab of materials
-            var colMaterials = new FilteredElementCollector(doc)
-                .WhereElementIsNotElementType()
-                .OfCategory(BuiltInCategory.INVALID)
-                .OfClass(typeof(Material));
-
             //grab first level in collection
-            var level = colLevels.FirstElement() as Level;
+            var level = (Level)colLevels.FirstElement();
 
             //grab all walls
             var colWalls = new FilteredElementCollector(doc)
@@ -55,31 +47,24 @@ namespace AMBRevitLibrary
                 .OfClass(typeof(Wall));
 
             //grab first wall in collection
-            var wall = colWalls.FirstElement() as Wall;
+            var wall = (Wall)colWalls.FirstElement();
 
             //grab all wall types
             var colWallTypes = new FilteredElementCollector(doc)
-                //.WhereElementIsNotElementType()
-                //.OfCategory(BuiltInCategory.INVALID)
+                .WhereElementIsNotElementType()
+                .OfCategory(BuiltInCategory.INVALID)
                 .OfClass(typeof(WallType));
 
-            //var colWallTypes = new FilteredElementCollector(doc)
-            //    .WhereElementIsElementType()
-            //    .OfCategory(BuiltInCategory.OST_Walls)
-            //    .ToElements();
-
-
             //grab first wall type in collection
-            var firstWallType = colWalls.FirstElement() as WallType;
+            var firstWallType = (WallType)colWalls.FirstElement();
 
             //set new wall type to null
             WallType newWallType = null;
-
+            
+            var tr = new Transaction(doc);
 
             try
             {
-                var tr = new Transaction(doc);
-
                 using (tr)
                 {
                     tr.Start("create new wall");
@@ -87,13 +72,14 @@ namespace AMBRevitLibrary
                     //duplicate wall type
                     if (newWallType != null)
                     {
-                        newWallType = firstWallType.Duplicate("New Wall") as WallType;
+                        newWallType = (WallType)firstWallType.Duplicate("New Wall");
                     }
                     else
                     {
                         throw new Exception("Value null");
                     }
 
+                    //newWallType = (WallType)firstWallType.Duplicate("New Wall");
 
                     //grab material of wall
                     var oldLayerMaterialId = firstWallType.GetCompoundStructure().GetLayers()[0].MaterialId;
@@ -111,7 +97,7 @@ namespace AMBRevitLibrary
                     var extLayerFinish1 = new CompoundStructureLayer(thk1, MaterialFunctionAssignment.Finish1, oldLayerMaterialId);
 
                     //middle
-                    var structLayer = new CompoundStructureLayer(thk3, MaterialFunctionAssignment.StructuralDeck, oldLayerMaterialId);
+                    var structLayer = new CompoundStructureLayer(thk3, MaterialFunctionAssignment.Structure, oldLayerMaterialId);
 
                     //interior
                     var intLayerFinish2 = new CompoundStructureLayer(thk2, MaterialFunctionAssignment.Finish2, oldLayerMaterialId);
@@ -158,9 +144,6 @@ namespace AMBRevitLibrary
 
                     //set offset
                     var offset = 0.00;
-
-                    //var wallId = newWallType.Id;
-                    //wallTypeId = newWallType.Id;
 
                     //place wall
                     Wall.Create(doc, geomLine, newWallType.Id, level.Id, height, offset, false, true);

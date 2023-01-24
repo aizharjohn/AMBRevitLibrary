@@ -37,6 +37,7 @@ namespace AMBRevitLibrary
             var roofLevel = UnitUtils.ConvertToInternalUnits(3000, unit);
             var groundLevel = UnitUtils.ConvertToInternalUnits(-500, unit);
 
+
             var tr = new Transaction(document);
 
             using (tr)
@@ -49,7 +50,7 @@ namespace AMBRevitLibrary
 
                     //ground floor level
                     var gfLevel = Level.Create(document, groundLevel);
-                    gfLevel.Name = "GFL";
+                    gfLevel.Name = "GFL"; 
 
                     //finish floor level
                     var ffLevel = Level.Create(document, 0.00);
