@@ -67,7 +67,6 @@ namespace AMBRevitLibrary
                     //create wall
                     Wall.Create(doc, geomLine, firstLevel.Id, false);
 
-                    //Wall.Create(doc, geomLine, firstLevel.Id, firstLevel.Id, height, offset, false, true);
 
                     tr.Commit();
                 }
