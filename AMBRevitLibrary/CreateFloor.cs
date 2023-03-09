@@ -18,10 +18,44 @@ namespace AMBRevitLibrary
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            //get application
             var uiapp = commandData.Application;
+
+            //get UI document
             var uidoc = uiapp.ActiveUIDocument;
-            var app = uiapp.Application;
+            
+            //var app = uiapp.Application;
+
+            //get document
             var doc = uidoc.Document;
+
+            //grab levels
+            var collLevels = new FilteredElementCollector(doc)
+                .WhereElementIsNotElementType()
+                .OfCategory(BuiltInCategory.INVALID)
+                .OfClass(typeof(Level));
+
+            //get FFL level
+            var ffl = new FilteredElementCollector(doc)
+                .OfClass(typeof(Level))
+                .Cast<Level>().FirstOrDefault(q => q.Name == "FFL");
+
+            var lvlId = ffl.Id;
+
+            //grab all floors
+            var colFloors = new FilteredElementCollector(doc)
+                .WhereElementIsNotElementType()
+                .OfCategory(BuiltInCategory.INVALID)
+                .OfClass(typeof(Floor));
+
+            // get floor
+            var floorType = new FilteredElementCollector(doc)
+                .OfClass(typeof(FloorType))
+                .Cast<FloorType>().FirstOrDefault(q => q.Name == "Generic 150mm");
+
+            //get element and cast the ID
+            var floorType1 = (FloorType)doc.GetElement(floorType.Id);
+
 
             //convert units to millimeters
             var unit = UnitTypeId.Millimeters;
@@ -33,35 +67,38 @@ namespace AMBRevitLibrary
             var pt3 = new XYZ(length, width, 0);
             var pt4 = new XYZ(0, width, 0);
 
+            var profile = new CurveLoop();
+
             var line1 = Line.CreateBound(pt1, pt2);
             var line2 = Line.CreateBound(pt2, pt3);
             var line3 = Line.CreateBound(pt3, pt4);
             var line4 = Line.CreateBound(pt4, pt1);
 
+            profile.Append(line1);
+            profile.Append(line2);
+            profile.Append(line3);
+            profile.Append(line4);
 
+            try
+            { 
+                var tr = new Transaction(doc);
 
-            var floorCurves = new List<Curve>();
-            //floorCurves.Add(pt1);
-            //var loop = new List<CurveLoop>();
-            //loop.Add(line1);
-            //loop.Add(line2);
-            //loop.Add(line3);
-            //loop.Add(line4);
+                using (tr)
+                {
+                    tr.Start("CreateFloor");
 
-            var level = doc.ActiveView.GenLevel;
+                    Floor.Create(doc, new List<CurveLoop> {profile}, floorType1.Id, lvlId);
 
-            var col = new FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Floors).OfClass(typeof(FloorType));
-
-            var floorType =  (FloorType)col.FirstElement();
-
-            var tr = new Transaction(doc, "Create Floor");
-
-            using (tr)
-            {
-                tr.Start();
-                //var floor = Floor.Create(doc, loop, floorType.Id, level.Id);
-                tr.Commit();
+                    tr.Commit();
+                }
             }
+            catch (Exception e)
+            {
+                message = e.Message;
+                return Result.Failed;
+            }
+                
+            
 
             return Result.Succeeded;
         }

@@ -23,7 +23,7 @@ namespace AMBRevitLibrary
             var app = uiapp.Application;
             var document = uidoc.Document;
 
-            //convert units to millimeters
+            //unit is set to in by default so convert it to mm
             var unit = UnitTypeId.Millimeters;
             var pt1 = UnitUtils.ConvertToInternalUnits(-6000, unit);
             var pt2 = UnitUtils.ConvertToInternalUnits(3300, unit);
@@ -33,9 +33,13 @@ namespace AMBRevitLibrary
             var pt6 = UnitUtils.ConvertToInternalUnits(-1800, unit);
             var pt7 = UnitUtils.ConvertToInternalUnits(7500, unit);
             var pt8 = UnitUtils.ConvertToInternalUnits(1800, unit);
+            var rfl = UnitUtils.ConvertToInternalUnits(3000, unit);
+            var gfl = UnitUtils.ConvertToInternalUnits(-500, unit);
+            var ffl = UnitUtils.ConvertToInternalUnits(0, unit);
 
-            var roofLevel = UnitUtils.ConvertToInternalUnits(3000, unit);
-            var groundLevel = UnitUtils.ConvertToInternalUnits(-500, unit);
+            var roofLevel = rfl;
+            var groundLevel = gfl;
+            var finishLevel = ffl;
 
 
             var tr = new Transaction(document);
@@ -46,20 +50,23 @@ namespace AMBRevitLibrary
                 {
                     tr.Start("GridsAndLevels");
 
-                    //create levels
+                    //CREATE LEVELS
 
                     //ground floor level
                     var gfLevel = Level.Create(document, groundLevel);
                     gfLevel.Name = "GFL"; 
 
                     //finish floor level
-                    var ffLevel = Level.Create(document, 0.00);
+                    var ffLevel = Level.Create(document, finishLevel);
                     ffLevel.Name = "FFL";
 
                     //roof level
                     var rfLevel = Level.Create(document, roofLevel);
                     rfLevel.Name = "RFL";
 
+
+                    // exception for grid in case of failure
+                    var exception = new Exception("Create a new straight grid failed.");
 
                     //GRID 1
                     //create the geometry line which the grid locates
@@ -71,7 +78,7 @@ namespace AMBRevitLibrary
                     var gridLine1 = Grid.Create(document, grid1Line);
                     if (null == gridLine1)
                     {
-                        throw new Exception("Create a new straight grid failed.");
+                        throw exception;
                     }
 
                     //modify the name of the created grid
@@ -88,7 +95,7 @@ namespace AMBRevitLibrary
                     var gridLine2 = Grid.Create(document, grid2Line);
                     if (null == gridLine2)
                     {
-                        throw new Exception("Create a new straight grid failed.");
+                        throw exception;
                     }
 
                     //modify the name of the created grid
@@ -105,7 +112,7 @@ namespace AMBRevitLibrary
                     var gridLine3 = Grid.Create(document, grid3Line);
                     if (null == gridLine3)
                     {
-                        throw new Exception("Create a new straight grid failed.");
+                        throw exception;
                     }
 
                     //modify the name of the created grid
@@ -122,7 +129,7 @@ namespace AMBRevitLibrary
                     var gridLine4 = Grid.Create(document, grid4Line);
                     if (null == gridLine4)
                     {
-                        throw new Exception("Create a new straight grid failed.");
+                        throw exception;
                     }
 
                     //modify the name of the created grid

@@ -59,6 +59,7 @@
     <Compile Include="CreateFloor.cs" />
     <Compile Include="CreateNewWall.cs" />
     <Compile Include="CreateNewWall2.cs" />
+    <Compile Include="CreateType1Wall.cs" />
     <Compile Include="CreateWall.cs" />
     <Compile Include="DeleteElement.cs" />
     <Compile Include="GridsAndLevels.cs" />

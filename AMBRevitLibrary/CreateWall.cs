@@ -27,26 +27,66 @@ namespace AMBRevitLibrary
             //get document
             var doc = uiDoc.Document;
 
-            //grab level
+            //grab levels
             var collLevels = new FilteredElementCollector(doc)
                 .WhereElementIsNotElementType()
                 .OfCategory(BuiltInCategory.INVALID)
                 .OfClass(typeof(Level));
 
-            //grab first level in collection
-            var firstLevel = (Level)collLevels.FirstElement();
+            //get FFL level
+            var ffl = new FilteredElementCollector(doc)
+                .OfClass(typeof(Level))
+                .Cast<Level>().FirstOrDefault(q => q.Name == "FFL");
+            
+            var lvlId = ffl.Id;
 
+            //grab all walls
+            var colWalls = new FilteredElementCollector(doc)
+                .WhereElementIsNotElementType()
+                .OfCategory(BuiltInCategory.INVALID)
+                .OfClass(typeof(Wall));
+
+            //grab first wall in collection
+            var wall = colWalls.FirstElement() as Wall;
+
+            //var wallId = wall.Id;
+
+            //grab all wall types
+            var colWallTypes = new FilteredElementCollector(doc)
+                .OfClass(typeof(WallType));
+
+            //grab first wall type in collection
+            //var firstWallType = colWalls.FirstElement() as WallType;
+
+            //get wall
+            var wType = new FilteredElementCollector(doc)
+                .OfClass(typeof(WallType))
+                .Cast<WallType>().FirstOrDefault(q => q.Name == "CW 102-50-100p");
+          
+            //get element and cast the ID
+            var wallType1 = (WallType)doc.GetElement(wType.Id);
+            
             //set unit to millimeters
             var unit = UnitTypeId.Millimeters;
 
             //wall length
-            var length = UnitUtils.ConvertToInternalUnits(1200, unit);
+            var length = UnitUtils.ConvertToInternalUnits(6000, unit);
 
             //wall height
             var height = UnitUtils.ConvertToInternalUnits(2400, unit);
 
             //wall offset
             var offset = UnitUtils.ConvertToInternalUnits(0, unit);
+
+            //point1
+            var stPt = UnitUtils.ConvertToInternalUnits(-6000, unit);
+
+            //point 2
+            var ptY = UnitUtils.ConvertToInternalUnits(1800, unit);
+
+            //z point
+            var ptZ = UnitUtils.ConvertToInternalUnits(0, unit);
+
 
             try
             {
@@ -55,18 +95,19 @@ namespace AMBRevitLibrary
                 {
                     tr.Start("CreateWall");
 
-
                     //create points
-                    var start = new XYZ(0, 0, 0);
-                    var end = new XYZ(length, 0, 0);
+                    var start = new XYZ(stPt,ptY, ptZ);
+                    var end = new XYZ(length, ptY, ptZ);
 
                     //create line
-                    var geomLine = Line.CreateBound(start, end);
-
+                    var geomLine = Line.CreateBound(start, end); 
 
                     //create wall
-                    Wall.Create(doc, geomLine, firstLevel.Id, false);
+                    var myWall = Wall.Create(doc, geomLine, wallType1.Id, lvlId, height, offset, false, false);
 
+                    //set location line to Finish Face Exterior
+                    myWall.get_Parameter(BuiltInParameter.WALL_KEY_REF_PARAM).Set(2);
+                                       
                     tr.Commit();
                 }
             }
