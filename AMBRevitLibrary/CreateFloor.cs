@@ -59,13 +59,14 @@ namespace AMBRevitLibrary
 
             //convert units to millimeters
             var unit = UnitTypeId.Millimeters;
-            var width = UnitUtils.ConvertToInternalUnits(1220, unit);
-            var length = UnitUtils.ConvertToInternalUnits(2440, unit);
+            var width = UnitUtils.ConvertToInternalUnits(1800, unit);
+            var length = UnitUtils.ConvertToInternalUnits(6000, unit);
+            
 
-            var pt1 = new XYZ(0, 0, 0);
-            var pt2 = new XYZ(length, 0, 0);
-            var pt3 = new XYZ(length, width, 0);
-            var pt4 = new XYZ(0, width, 0);
+            var pt1 = new XYZ(-length, width, 0);
+            var pt2 = new XYZ(length, width, 0);
+            var pt3 = new XYZ(length, -width, 0);
+            var pt4 = new XYZ(-length, -width, 0);
 
             var profile = new CurveLoop();
 
@@ -78,6 +79,8 @@ namespace AMBRevitLibrary
             profile.Append(line2);
             profile.Append(line3);
             profile.Append(line4);
+
+            
 
             try
             { 

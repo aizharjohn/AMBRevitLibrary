@@ -70,7 +70,7 @@ namespace AMBRevitLibrary
             var unit = UnitTypeId.Millimeters;
 
             //wall length
-            var length = UnitUtils.ConvertToInternalUnits(6000, unit);
+            //var length = UnitUtils.ConvertToInternalUnits(6000, unit);
 
             //wall height
             var height = UnitUtils.ConvertToInternalUnits(2400, unit);
@@ -79,7 +79,7 @@ namespace AMBRevitLibrary
             var offset = UnitUtils.ConvertToInternalUnits(0, unit);
 
             //point1
-            var stPt = UnitUtils.ConvertToInternalUnits(-6000, unit);
+            var ptX = UnitUtils.ConvertToInternalUnits(6000, unit);
 
             //point 2
             var ptY = UnitUtils.ConvertToInternalUnits(1800, unit);
@@ -87,6 +87,9 @@ namespace AMBRevitLibrary
             //z point
             var ptZ = UnitUtils.ConvertToInternalUnits(0, unit);
 
+            var wallWidth = UnitUtils.ConvertToInternalUnits(264, unit);
+
+            var wallWd = wallWidth / 2;
 
             try
             {
@@ -96,18 +99,30 @@ namespace AMBRevitLibrary
                     tr.Start("CreateWall");
 
                     //create points
-                    var start = new XYZ(stPt,ptY, ptZ);
-                    var end = new XYZ(length, ptY, ptZ);
+                    var start1 = new XYZ(-ptX,ptY - wallWd, ptZ);
+                    var end1 = new XYZ(ptX, ptY - wallWd, ptZ);
+                    
+                    var start2 = new XYZ(ptX,-ptY + wallWd, ptZ);
+                    var end2 = new XYZ(-ptX,-ptY + wallWd, ptZ);
+
 
                     //create line
-                    var geomLine = Line.CreateBound(start, end); 
+                    var geomLine1 = Line.CreateBound(start1, end1);
+                    var geomLine2 = Line.CreateBound(start2, end2);
 
                     //create wall
-                    var myWall = Wall.Create(doc, geomLine, wallType1.Id, lvlId, height, offset, false, false);
+                    var myWall = Wall.Create(doc, geomLine1, wallType1.Id, lvlId, height, offset, false, false);
 
                     //set location line to Finish Face Exterior
                     myWall.get_Parameter(BuiltInParameter.WALL_KEY_REF_PARAM).Set(2);
-                                       
+
+                    var myWall2 = Wall.Create(doc, geomLine2, wallType1.Id, lvlId, height, offset, false, false);
+                    
+                    //set location line to Finish Face Exterior
+                    myWall2.get_Parameter(BuiltInParameter.WALL_KEY_REF_PARAM).Set(2);
+
+
+                    //commit transaction                                   
                     tr.Commit();
                 }
             }
