@@ -241,7 +241,7 @@ namespace AMBRevitLibrary
 
             //create the button data
             var btnData = new PushButtonData(
-                "Floor Button 1",
+                "Ceiling Button 1",
                 "Create Ceiling",
                 Assembly.GetExecutingAssembly().Location,
                 "AMBRevitLibrary.CreateCeiling")

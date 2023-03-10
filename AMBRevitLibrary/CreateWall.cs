@@ -87,6 +87,7 @@ namespace AMBRevitLibrary
             //z point
             var ptZ = UnitUtils.ConvertToInternalUnits(0, unit);
 
+            // wall width / 2
             var wallWidth = UnitUtils.ConvertToInternalUnits(264, unit);
 
             var wallWd = wallWidth / 2;
@@ -105,10 +106,18 @@ namespace AMBRevitLibrary
                     var start2 = new XYZ(ptX,-ptY + wallWd, ptZ);
                     var end2 = new XYZ(-ptX,-ptY + wallWd, ptZ);
 
+                    var start3 = new XYZ(ptX - wallWd, ptY, ptZ);
+                    var end3 = new XYZ(ptX - wallWd, -ptY, ptZ);
+
+                    var start4 = new XYZ(-ptX + wallWd, -ptY, ptZ);
+                    var end4 = new XYZ(-ptX + wallWd, ptY, ptZ);
+
 
                     //create line
                     var geomLine1 = Line.CreateBound(start1, end1);
                     var geomLine2 = Line.CreateBound(start2, end2);
+                    var geomLine3 = Line.CreateBound(start3, end3);
+                    var geomLine4 = Line.CreateBound(start4, end4);
 
                     //create wall
                     var myWall = Wall.Create(doc, geomLine1, wallType1.Id, lvlId, height, offset, false, false);
@@ -121,9 +130,15 @@ namespace AMBRevitLibrary
                     //set location line to Finish Face Exterior
                     myWall2.get_Parameter(BuiltInParameter.WALL_KEY_REF_PARAM).Set(2);
 
-                    //myWall2.Orientation
+                    var myWall3 = Wall.Create(doc, geomLine3, wallType1.Id, lvlId, height, offset, false, false);
 
-                    //ElementTransformUtils.MirrorElement(doc, myWall,);
+                    //set location line to Finish Face Exterior
+                    myWall3.get_Parameter(BuiltInParameter.WALL_KEY_REF_PARAM).Set(2);
+
+                    var myWall4 = Wall.Create(doc, geomLine4, wallType1.Id, lvlId, height, offset, false, false);
+
+                    //set location line to Finish Face Exterior
+                    myWall4.get_Parameter(BuiltInParameter.WALL_KEY_REF_PARAM).Set(2);
 
 
                     //commit transaction                                   

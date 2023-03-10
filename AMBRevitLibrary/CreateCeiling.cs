@@ -32,12 +32,12 @@ namespace AMBRevitLibrary
                 .OfCategory(BuiltInCategory.INVALID)
                 .OfClass(typeof(Level));
 
-            //get RFL level
-            var rfl = new FilteredElementCollector(doc)
+            //get FFL level
+            var ffl = new FilteredElementCollector(doc)
                 .OfClass(typeof(Level))
-                .Cast<Level>().FirstOrDefault(q => q.Name == "RFL");
+                .Cast<Level>().FirstOrDefault(q => q.Name == "FFL");
 
-            var lvlId = rfl.Id;
+            var lvlId = ffl.Id;
 
             //grab all ceiling
             var colCeil = new FilteredElementCollector(doc)
