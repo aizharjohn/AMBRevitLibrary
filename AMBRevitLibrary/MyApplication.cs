@@ -38,6 +38,7 @@ namespace AMBRevitLibrary
             MyRibbonPanels.createWallsPanel(application);
             MyRibbonPanels.createFloorPanel(application);
             MyRibbonPanels.createCeilingPanel(application);
+            MyRibbonPanels.createRoofPanel(application);
         }
     }
 }

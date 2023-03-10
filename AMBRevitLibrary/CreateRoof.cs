@@ -8,6 +8,9 @@ using Autodesk.Revit.Attributes;
 using Autodesk.Revit;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.DB;
+using System.Collections.ObjectModel;
+using Autodesk.Revit.Creation;
+using System.Reflection.Emit;
 
 namespace AMBRevitLibrary
 {
@@ -41,17 +44,18 @@ namespace AMBRevitLibrary
 
             //grab all rooftypes
             var colRoofTypes = new FilteredElementCollector(doc)
-                .WhereElementIsNotElementType()
-                .OfCategory(BuiltInCategory.INVALID)
+            //.WhereElementIsNotElementType()
+            //.OfCategory(BuiltInCategory.INVALID)
                 .OfClass(typeof(RoofType));
 
-            RoofType roofType = null;
+            var roofType = (RoofType)colRoofTypes.FirstElement();
 
-            foreach (RoofType rt in colRoofTypes)
-            {
-                roofType= rt;
-                break;
-            }
+
+            //foreach (RoofType rt in colRoofTypes)
+            //{
+            //    roofType= rt;
+            //    break;
+            //}
 
             //define the footprint
             var footPrint = app.Create.NewCurveArray();
@@ -72,11 +76,52 @@ namespace AMBRevitLibrary
                         continue;
                     }
 
+                    var modelCurve = (ModelCurve)element;
+                    if (modelCurve != null)
+                    {
+                        footPrint.Append(modelCurve.GeometryCurve);
+                    }
+
                 }
 
+            } 
+            else
+            {
+                throw new Exception("You should select a curve loop, or a wall loop, or loops combination \nof walls and curves to create a footprint roof.");
             }
 
-            return Result.Succeeded;
+            try
+            {
+                var tr = new Transaction(doc);
+
+                using (tr)
+                {
+                    var footPrintToModelCurveMapping = new ModelCurveArray();
+
+                    var footPrintRoof = doc.Create.NewFootPrintRoof(footPrint, rfl, roofType, out footPrintToModelCurveMapping);
+
+                    var iterator = footPrintToModelCurveMapping.ForwardIterator();
+
+                    iterator.Reset();
+
+                    while (iterator.MoveNext())
+                    {
+                        var modelCurve = (ModelCurve)iterator.Current;
+                        footPrintRoof.set_DefinesSlope(modelCurve, true);
+                        footPrintRoof.set_SlopeAngle(modelCurve, 0.5);
+                    }
+
+                    tr.Commit();
+                }
+            }
+
+            catch (Exception e)
+            {
+                message = e.Message;
+                return Result.Failed;
+            }
+
+                return Result.Succeeded;
         }
     }
 }

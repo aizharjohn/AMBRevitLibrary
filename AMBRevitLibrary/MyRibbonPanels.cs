@@ -257,6 +257,51 @@ namespace AMBRevitLibrary
             button.Enabled = true;
         }
 
+        public static void createRoofPanel(UIControlledApplication application)
+        {
+            var myTab = Constants.RIBBON_TAB;
+            var myPanel = Constants.ROOF_PANEL;
+
+            //get or create the panel
+            RibbonPanel panel = null;
+            List<RibbonPanel> panels = application.GetRibbonPanels(myTab);
+            foreach (RibbonPanel pnl in panels)
+            {
+                if (pnl.Name == myPanel)
+                {
+                    panel = pnl;
+                    break;
+                }
+            }
+
+            //if panel not found, create it
+            if (panel == null)
+            {
+                panel = application.CreateRibbonPanel(myTab, myPanel);
+            }
+
+            //get the image for the button
+            var img = Properties.Resources.icons8_structural_48;
+            var imgSrc = GetImageSource(img);
+
+            //create the button data
+            var btnData = new PushButtonData(
+                "Roof Button 1",
+                "Create Roof",
+                Assembly.GetExecutingAssembly().Location,
+                "AMBRevitLibrary.CreateRoof")
+            {
+                ToolTip = "Short Description",
+                LongDescription = "Long Description",
+                Image = imgSrc,
+                LargeImage = imgSrc
+            };
+
+            //add the button to the panel
+            var button = (PushButton)panel.AddItem(btnData);
+            button.Enabled = true;
+        }
+
         private static BitmapSource GetImageSource(Image img)
         {
             var bmp = new BitmapImage();

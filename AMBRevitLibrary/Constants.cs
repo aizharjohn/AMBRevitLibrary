@@ -8,5 +8,6 @@
         public const string GRID_AND_LEVEL_PANEL = "Setup Grid & Level";
         public const string FLOOR_PANEL = "Create Floor";
         public const string CEILING_PANEL = "Create Ceiling";
+        public const string ROOF_PANEL = "Create Roof";
     }
 }
