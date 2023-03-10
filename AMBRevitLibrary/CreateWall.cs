@@ -121,6 +121,10 @@ namespace AMBRevitLibrary
                     //set location line to Finish Face Exterior
                     myWall2.get_Parameter(BuiltInParameter.WALL_KEY_REF_PARAM).Set(2);
 
+                    //myWall2.Orientation
+
+                    //ElementTransformUtils.MirrorElement(doc, myWall,);
+
 
                     //commit transaction                                   
                     tr.Commit();
