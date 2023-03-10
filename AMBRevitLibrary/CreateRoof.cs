@@ -56,8 +56,23 @@ namespace AMBRevitLibrary
             //define the footprint
             var footPrint = app.Create.NewCurveArray();
 
-            if (true)
+            ICollection<ElementId> selectedIds = uiDoc.Selection.GetElementIds();
+
+            if (selectedIds.Count != 0)
             {
+                foreach (var id in selectedIds)
+                {
+                    var element = doc.GetElement(id);
+                    var wall = (Wall) element;
+
+                    if (wall != null)
+                    {
+                        var wallCurve = (LocationCurve)wall.Location;
+                        footPrint.Append(wallCurve.Curve);
+                        continue;
+                    }
+
+                }
 
             }
 
