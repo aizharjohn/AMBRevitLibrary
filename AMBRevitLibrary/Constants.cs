@@ -9,5 +9,6 @@
         public const string FLOOR_PANEL = "Create Floor";
         public const string CEILING_PANEL = "Create Ceiling";
         public const string ROOF_PANEL = "Create Roof";
+        public const string EXPORT_TO_DWG = "Export to DWG";
     }
 }

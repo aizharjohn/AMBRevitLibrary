@@ -59,11 +59,11 @@
     <Compile Include="CreateCeiling.cs" />
     <Compile Include="CreateFloor.cs" />
     <Compile Include="CreateNewWall.cs" />
-    <Compile Include="CreateNewWall2.cs" />
     <Compile Include="CreateRoof.cs" />
-    <Compile Include="CreateType1Wall.cs" />
     <Compile Include="CreateWall.cs" />
     <Compile Include="DeleteElement.cs" />
+    <Compile Include="ExportToDwg.cs" />
+    <Compile Include="ExportToPdf.cs" />
     <Compile Include="GridsAndLevels.cs" />
     <Compile Include="Hello.cs" />
     <Compile Include="Constants.cs" />

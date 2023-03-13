@@ -50,13 +50,6 @@ namespace AMBRevitLibrary
 
             var roofType = (RoofType)colRoofTypes.FirstElement();
 
-
-            //foreach (RoofType rt in colRoofTypes)
-            //{
-            //    roofType= rt;
-            //    break;
-            //}
-
             //define the footprint
             var footPrint = app.Create.NewCurveArray();
 

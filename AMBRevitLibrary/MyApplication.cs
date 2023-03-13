@@ -39,6 +39,7 @@ namespace AMBRevitLibrary
             MyRibbonPanels.createFloorPanel(application);
             MyRibbonPanels.createCeilingPanel(application);
             MyRibbonPanels.createRoofPanel(application);
+            MyRibbonPanels.exportToDwg(application);
         }
     }
 }
