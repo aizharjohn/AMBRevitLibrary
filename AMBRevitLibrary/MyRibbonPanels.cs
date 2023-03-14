@@ -146,7 +146,7 @@ namespace AMBRevitLibrary
                 "WallButton2",
                 "Type 2",
                 Assembly.GetExecutingAssembly().Location,
-                "AMBRevitLibrary.CreateNewWall2")
+                "AMBRevitLibrary.CreateNewWall")
             {
                 ToolTip = "Wall type 2",
                 LongDescription = "Wall type 2",
@@ -302,10 +302,55 @@ namespace AMBRevitLibrary
             button.Enabled = true;
         }
 
-        public static void exportToDwg(UIControlledApplication application)
+        //public static void exportToDwg(UIControlledApplication application)
+        //{
+        //    var myTab = Constants.RIBBON_TAB;
+        //    var myPanel = Constants.EXPORT_TO_DWG;
+
+        //    //get or create the panel
+        //    RibbonPanel panel = null;
+        //    List<RibbonPanel> panels = application.GetRibbonPanels(myTab);
+        //    foreach (RibbonPanel pnl in panels)
+        //    {
+        //        if (pnl.Name == myPanel)
+        //        {
+        //            panel = pnl;
+        //            break;
+        //        }
+        //    }
+
+        //    //if panel not found, create it
+        //    if (panel == null)
+        //    {
+        //        panel = application.CreateRibbonPanel(myTab, myPanel);
+        //    }
+
+        //    //get the image for the button
+        //    var img = Properties.Resources.icons8_structural_48;
+        //    var imgSrc = GetImageSource(img);
+
+        //    //create the button data
+        //    var btnData = new PushButtonData(
+        //        "Export Button 1",
+        //        "Export to DWG",
+        //        Assembly.GetExecutingAssembly().Location,
+        //        "AMBRevitLibrary.ExportToDwg")
+        //    {
+        //        ToolTip = "Short Description",
+        //        LongDescription = "Long Description",
+        //        Image = imgSrc,
+        //        LargeImage = imgSrc
+        //    };
+
+        //    //add the button to the panel
+        //    var button = (PushButton)panel.AddItem(btnData);
+        //    button.Enabled = true;
+        //}
+
+        public static void exportsPanel(UIControlledApplication application)
         {
             var myTab = Constants.RIBBON_TAB;
-            var myPanel = Constants.EXPORT_TO_DWG;
+            var myPanel = Constants.EXPORTS_PANEL;
 
             //get or create the panel
             RibbonPanel panel = null;
@@ -330,22 +375,39 @@ namespace AMBRevitLibrary
             var imgSrc = GetImageSource(img);
 
             //create the button data
-            var btnData = new PushButtonData(
-                "Export Button 1",
-                "Export to DWG",
+            var dwgExport = new PushButtonData(
+                "Dwg1",
+                "To DWG",
                 Assembly.GetExecutingAssembly().Location,
                 "AMBRevitLibrary.ExportToDwg")
             {
-                ToolTip = "Short Description",
-                LongDescription = "Long Description",
+                ToolTip = "Export to DWG",
+                LongDescription = "Exports all your Revit sheets to DWG format",
                 Image = imgSrc,
                 LargeImage = imgSrc
             };
 
-            //add the button to the panel
-            var button = (PushButton)panel.AddItem(btnData);
-            button.Enabled = true;
+            //create the button data
+            var pdfExport = new PushButtonData(
+                "Pdf1",
+                "To PDF",
+                Assembly.GetExecutingAssembly().Location,
+                "AMBRevitLibrary.ExportToPdf")
+            {
+                ToolTip = "Export to PDF",
+                LongDescription = "Exports all your Revit sheets to PDF format",
+                Image = imgSrc,
+                LargeImage = imgSrc
+            };
+
+            List<RibbonItem> exportButtons = new List<RibbonItem>();
+
+            exportButtons.AddRange(panel.AddStackedItems(dwgExport, pdfExport));
         }
+
+
+
+
 
         private static BitmapSource GetImageSource(Image img)
         {

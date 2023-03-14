@@ -23,7 +23,7 @@ namespace AMBRevitLibrary
             var app = uiApp.Application;
 
             //get UI document
-            var uiDoc = commandData.Application.ActiveUIDocument;
+            var uiDoc = uiApp.ActiveUIDocument;
 
             //get document
             var doc = uiDoc.Document;
@@ -39,11 +39,6 @@ namespace AMBRevitLibrary
                 .OfCategory(BuiltInCategory.INVALID)
                 .OfClass(typeof(Level));
 
-            //test grab of materials
-            var colMaterials = new FilteredElementCollector(doc)
-                .WhereElementIsNotElementType()
-                .OfCategory(BuiltInCategory.INVALID)
-                .OfClass(typeof(Material));
 
             //grab first level in collection
             var level = colLevels.FirstElement() as Level;
@@ -63,10 +58,18 @@ namespace AMBRevitLibrary
                 //.OfCategory(BuiltInCategory.INVALID)
                 .OfClass(typeof(WallType));
 
-            //var colWallTypes = new FilteredElementCollector(doc)
-            //    .WhereElementIsElementType()
-            //    .OfCategory(BuiltInCategory.OST_Walls)
-            //    .ToElements();
+            //grab all materials
+            var colMaterials = new FilteredElementCollector(doc)
+                .WhereElementIsNotElementType()
+                .OfCategory(BuiltInCategory.OST_Materials)
+                .OfClass(typeof(Material));
+
+            //get gypsum wall board
+            var wType = new FilteredElementCollector(doc)
+                .OfClass(typeof(Material))
+                .Cast<Material>().FirstOrDefault(q => q.Name == "Gypsum Wall Board");
+
+            var matId = wType.Id;
 
 
             //grab first wall type in collection
@@ -74,7 +77,6 @@ namespace AMBRevitLibrary
 
             //set new wall type to null
             WallType newWallType = null;
-
 
             try
             {
@@ -91,8 +93,11 @@ namespace AMBRevitLibrary
                     }
                     else
                     {
-                        throw new Exception("Value null");
+                        var e = new Exception();
+                        message = e.Message;
                     }
+
+                    //var newWallType = (WallType)firstWallType.Duplicate("New Wall");
 
 
                     //grab material of wall
@@ -108,13 +113,13 @@ namespace AMBRevitLibrary
 
                     //set wall structure
                     //exterior
-                    var extLayerFinish1 = new CompoundStructureLayer(thk1, MaterialFunctionAssignment.Finish1, oldLayerMaterialId);
+                    var extLayerFinish1 = new CompoundStructureLayer(thk1, MaterialFunctionAssignment.Finish1, matId);
 
                     //middle
-                    var structLayer = new CompoundStructureLayer(thk3, MaterialFunctionAssignment.StructuralDeck, oldLayerMaterialId);
+                    var structLayer = new CompoundStructureLayer(thk3, MaterialFunctionAssignment.StructuralDeck, matId);
 
                     //interior
-                    var intLayerFinish2 = new CompoundStructureLayer(thk2, MaterialFunctionAssignment.Finish2, oldLayerMaterialId);
+                    var intLayerFinish2 = new CompoundStructureLayer(thk2, MaterialFunctionAssignment.Finish2, matId);
 
                     //grab wall compound structure
                     var compoundStructure = newWallType.GetCompoundStructure();

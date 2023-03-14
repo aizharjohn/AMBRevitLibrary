@@ -46,11 +46,6 @@ namespace AMBRevitLibrary
                 .OfCategory(BuiltInCategory.INVALID)
                 .OfClass(typeof(Wall));
 
-            //grab first wall in collection
-            var wall = colWalls.FirstElement() as Wall;
-
-            //var wallId = wall.Id;
-
             //grab all wall types
             var colWallTypes = new FilteredElementCollector(doc)
                 .OfClass(typeof(WallType));

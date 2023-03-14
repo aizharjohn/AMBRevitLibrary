@@ -34,7 +34,7 @@ namespace AMBRevitLibrary
             var collector = new FilteredElementCollector(doc);
 
             // filter out all elements except Views
-            ICollection<Element> collection = collector.OfClass(typeof(ViewSheet)).ToElements();
+            var collection = collector.OfClass(typeof(ViewSheet)).ToElements();
 
             try
             {
@@ -73,7 +73,7 @@ namespace AMBRevitLibrary
                             if (viewSheet.IsPlaceholder == false)
                             {
                                 sheetsToPDF.Add(e.Id);
-                                x++;
+                                x+=1;
                             }
                         }
                         catch (Exception exception)
@@ -89,11 +89,12 @@ namespace AMBRevitLibrary
                     var dtNow = DateTime.Now;
                     var dt = string.Format("{0:yyyyMMdd HHmm}", dtNow);
 
+                    
+
                     if (doc.PathName != "")
                     {
                         //use model path + date and time
-                        //path = Path.GetDirectoryName(doc.PathName) + "\\" + dt;
-                        path = Path.GetDirectoryName("C:\\Users\\aizhar\\Desktop\\") + "\\" + dt;
+                        path = Path.GetDirectoryName(doc.PathName) + "\\" + dt;
                     }
                     else
                     {
@@ -104,6 +105,8 @@ namespace AMBRevitLibrary
                         file = "NONAME";
 
                     }
+
+
 
                     //create folder
                     Directory.CreateDirectory(path);

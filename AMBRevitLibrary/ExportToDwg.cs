@@ -35,7 +35,7 @@ namespace AMBRevitLibrary
             var collector = new FilteredElementCollector(doc);
 
             // filter out all elements except Views
-            ICollection<Element> collection = collector.OfClass(typeof(ViewSheet)).ToElements();
+            var collection = collector.OfClass(typeof(ViewSheet)).ToElements();
 
             try
             {
@@ -54,6 +54,8 @@ namespace AMBRevitLibrary
                     dwgOptions.MergedViews = true;
 
                     dwgOptions.SharedCoords = true;
+
+                    
 
                     // add a counter to count the sheets exported
                     var x = 0;
