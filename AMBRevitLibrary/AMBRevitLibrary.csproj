@@ -67,6 +67,7 @@
     <Compile Include="GridsAndLevels.cs" />
     <Compile Include="Hello.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="MyApplication.cs" />
     <Compile Include="MyRibbonPanels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -87,6 +88,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="assets\icons8-structural-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-engineering-16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -33,7 +33,7 @@ namespace AMBRevitLibrary
             }
 
             //add the panels here
-            MyRibbonPanels.createHelloPanel(application);
+            //MyRibbonPanels.createHelloPanel(application);
             MyRibbonPanels.createGridAndLevelPanel(application);
             MyRibbonPanels.createWallsPanel(application);
             MyRibbonPanels.createFloorPanel(application);

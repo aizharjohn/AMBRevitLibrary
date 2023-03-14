@@ -15,24 +15,20 @@ namespace AMBRevitLibrary
     [Transaction(TransactionMode.Manual)]
     public class GridsAndLevels : IExternalCommand
     {
-
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             var uiapp = commandData.Application;
             var uidoc = uiapp.ActiveUIDocument;
-            var app = uiapp.Application;
             var document = uidoc.Document;
 
             //unit is set to in by default so convert it to mm
             var unit = UnitTypeId.Millimeters;
-            var pt1 = UnitUtils.ConvertToInternalUnits(-6000, unit);
+
+            var pt1 = UnitUtils.ConvertToInternalUnits(6000, unit);
             var pt2 = UnitUtils.ConvertToInternalUnits(3300, unit);
-            var pt3 = UnitUtils.ConvertToInternalUnits(6000, unit);
-            var pt4 = UnitUtils.ConvertToInternalUnits(-3300, unit);
-            var pt5 = UnitUtils.ConvertToInternalUnits(-7500, unit);
-            var pt6 = UnitUtils.ConvertToInternalUnits(-1800, unit);
-            var pt7 = UnitUtils.ConvertToInternalUnits(7500, unit);
-            var pt8 = UnitUtils.ConvertToInternalUnits(1800, unit);
+            var pt3 = UnitUtils.ConvertToInternalUnits(7500, unit);
+            var pt4 = UnitUtils.ConvertToInternalUnits(1800, unit);
+            
             var rfl = UnitUtils.ConvertToInternalUnits(3000, unit);
             var gfl = UnitUtils.ConvertToInternalUnits(-500, unit);
             var ffl = UnitUtils.ConvertToInternalUnits(0, unit);
@@ -40,6 +36,12 @@ namespace AMBRevitLibrary
             var roofLevel = rfl;
             var groundLevel = gfl;
             var finishLevel = ffl;
+
+            var gflName = "GFL";
+            var fflName = "FFL";
+            var rflName = "RFL";
+
+            String[] gridNames = {"1", "2", "A", "B" };
 
 
             var tr = new Transaction(document);
@@ -50,94 +52,42 @@ namespace AMBRevitLibrary
                 {
                     tr.Start("GridsAndLevels");
 
-                    //CREATE LEVELS
-
-                    //ground floor level
-                    var gfLevel = Level.Create(document, groundLevel);
-                    gfLevel.Name = "GFL"; 
-
-                    //finish floor level
-                    var ffLevel = Level.Create(document, finishLevel);
-                    ffLevel.Name = "FFL";
-
-                    //roof level
-                    var rfLevel = Level.Create(document, roofLevel);
-                    rfLevel.Name = "RFL";
-
-
-                    // exception for grid in case of failure
-                    var exception = new Exception("Create a new straight grid failed.");
-
-                    //GRID 1
-                    //create the geometry line which the grid locates
-                    var line1start = new XYZ(pt1, pt2, 0);
-                    var line1end = new XYZ(pt1, pt4, 0);
-                    var grid1Line = Line.CreateBound(line1start, line1end);
-
-                    //create grid using the geometry line
-                    var gridLine1 = Grid.Create(document, grid1Line);
-                    if (null == gridLine1)
-                    {
-                        throw exception;
-                    }
-
-                    //modify the name of the created grid
-                    gridLine1.Name = "1";
-
-
-                    //GRID 2
-                    //create the geometry line which the grid locates
-                    var line2start = new XYZ(pt3, pt2, 0);
-                    var line2end = new XYZ(pt3, pt4, 0);
-                    var grid2Line = Line.CreateBound(line2start, line2end);
-
-                    //create grid using the geometry line
-                    var gridLine2 = Grid.Create(document, grid2Line);
-                    if (null == gridLine2)
-                    {
-                        throw exception;
-                    }
-
-                    //modify the name of the created grid
-                    gridLine2.Name = "2";
-
-
-                    //GRID 3
-                    //create the geometry line which the grid locates
-                    var line3start = new XYZ(pt5, pt6, 0);
-                    var line3end = new XYZ(pt7, pt6, 0);
-                    var grid3Line = Line.CreateBound(line3start, line3end);
-
-                    //create grid using the geometry line
-                    var gridLine3 = Grid.Create(document, grid3Line);
-                    if (null == gridLine3)
-                    {
-                        throw exception;
-                    }
-
-                    //modify the name of the created grid
-                    gridLine3.Name = "B";
-
-
-                    //GRID 4
-                    //create the geometry line which the grid locates
-                    var line4start = new XYZ(pt5, pt8, 0);
-                    var line4end = new XYZ(pt7, pt8, 0);
-                    var grid4Line = Line.CreateBound(line4start, line4end);
-
-                    //create grid using the geometry line
-                    var gridLine4 = Grid.Create(document, grid4Line);
-                    if (null == gridLine4)
-                    {
-                        throw exception;
-                    }
-
-                    //modify the name of the created grid
-                    gridLine4.Name = "A";
-
                     //delete default levels
                     //DeleteElement.deleteLevel(document, "Level 1");
                     //DeleteElement.deleteLevel(document, "Level 2");
+
+                    //CREATE LEVELS
+
+                    //gf level
+                    var gfLevel = new Helpers();
+                    gfLevel.createLevel(document, gfl, gflName);
+
+                    //finish floor level
+                    var ffLevel = new Helpers();
+                    ffLevel.createLevel(document, ffl, fflName);
+
+                    //roof level
+                    var rfLevel = new Helpers();
+                    rfLevel.createLevel(document, rfl, rflName);
+
+                    //CREATE GRIDS
+
+                    //GRID 1
+                    var gridLine1 = new Helpers();
+                    gridLine1.createStraightGrid(document, -pt1, pt2, -pt1, -pt2, gridNames[0]);
+
+                    //GRID 2
+                    var gridLine2 = new Helpers();
+                    gridLine2.createStraightGrid(document, pt1, pt2, pt1, -pt2, gridNames[1]);
+
+                    //GRID 3
+                    var gridLine3 = new Helpers();
+                    gridLine3.createStraightGrid(document, -pt3, -pt4, pt3, -pt4, gridNames[2]);
+
+                    //GRID 4
+                    var gridLine4 = new Helpers();
+                    gridLine4.createStraightGrid(document, -pt3, pt4, pt3, pt4, gridNames[3]);
+
 
                     tr.Commit();
                 }
@@ -145,6 +95,7 @@ namespace AMBRevitLibrary
                 {
                     Debug.Print(e.Message);
                     tr.RollBack();
+                    return Result.Failed;
                 }
 
                 return Result.Succeeded;
