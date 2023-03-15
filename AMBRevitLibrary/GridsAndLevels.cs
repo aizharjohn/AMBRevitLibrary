@@ -59,38 +59,26 @@ namespace AMBRevitLibrary
                     //CREATE LEVELS
 
                     //gf level
-                    Helpers.createLevel(document, gfl, gflName);
+                    Helpers.createLevel(document, groundLevel, gflName);
 
                     //finish floor level
-                    //var ffLevel = new Helpers();
-                    //ffLevel.createLevel(document, ffl, fflName);
-                    Helpers.createLevel(document,ffl, fflName);
+                    Helpers.createLevel(document, finishLevel, fflName);
 
                     //roof level
-                    //var rfLevel = new Helpers();
-                    //rfLevel.createLevel(document, rfl, rflName);
-                    Helpers.createLevel(document, rfl, rflName);
+                    Helpers.createLevel(document, roofLevel, rflName);
 
                     //CREATE GRIDS
 
                     //GRID 1
-                    //var gridLine1 = new Helpers();
-                    //gridLine1.createStraightGrid(document, -pt1, pt2, -pt1, -pt2, gridNames[0]);
                     Helpers.createStraightGrid(document, -pt1, pt2, -pt1, -pt2, gridNames[0]);
 
                     //GRID 2
-                    //var gridLine2 = new Helpers();
-                    //gridLine2.createStraightGrid(document, pt1, pt2, pt1, -pt2, gridNames[1]);
                     Helpers.createStraightGrid(document, pt1, pt2, pt1, -pt2, gridNames[1]);
 
                     //GRID 3
-                    //var gridLine3 = new Helpers();
-                    //gridLine3.createStraightGrid(document, -pt3, -pt4, pt3, -pt4, gridNames[2]);
                     Helpers.createStraightGrid(document, -pt3, -pt4, pt3, -pt4, gridNames[2]);
 
                     //GRID 4
-                    //var gridLine4 = new Helpers();
-                    //gridLine4.createStraightGrid(document, -pt3, pt4, pt3, pt4, gridNames[3]);
                     Helpers.createStraightGrid(document, -pt3, pt4, pt3, pt4, gridNames[3]);
 
 
