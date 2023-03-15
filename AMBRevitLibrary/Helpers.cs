@@ -11,9 +11,9 @@ using Autodesk.Revit.DB;
 
 namespace AMBRevitLibrary
 {
-    internal class Helpers
+    internal static class Helpers
     {
-        public Level createLevel(Document doc, double elev, string name)
+        public static Level createLevel(Document doc, double elev, string name)
         {
             var level = Level.Create(doc, elev);
             level.Name = name;
@@ -21,7 +21,7 @@ namespace AMBRevitLibrary
             return level;
         }
 
-        public Grid createStraightGrid(Document doc, double point1, double point2, double point3, double point4, string name)
+        public static Grid createStraightGrid(Document doc, double point1, double point2, double point3, double point4, string name)
         {
             var lineStart = new XYZ(point1, point2, 0);
             var lineEnd = new XYZ(point3, point4, 0);
