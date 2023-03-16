@@ -22,130 +22,86 @@ namespace AMBRevitLibrary
             var app = uiApp.Application;
 
             //get UI document
-            var uiDoc = commandData.Application.ActiveUIDocument;
+            var uiDoc = uiApp.ActiveUIDocument;
 
             //get document
             var doc = uiDoc.Document;
 
-            //grab levels
-            var collLevels = new FilteredElementCollector(doc)
-                .WhereElementIsNotElementType()
-                .OfCategory(BuiltInCategory.INVALID)
-                .OfClass(typeof(Level));
-
-            //get FFL level
-            var ffl = new FilteredElementCollector(doc)
-                .OfClass(typeof(Level))
-                .Cast<Level>().FirstOrDefault(q => q.Name == "FFL");
-            
-            var lvlId = ffl.Id;
-
-            //grab all walls
-            var colWalls = new FilteredElementCollector(doc)
-                .WhereElementIsNotElementType()
-                .OfCategory(BuiltInCategory.INVALID)
-                .OfClass(typeof(Wall));
-
-            //grab all wall types
-            var colWallTypes = new FilteredElementCollector(doc)
-                .OfClass(typeof(WallType));
-
-            //grab first wall type in collection
-            //var firstWallType = colWalls.FirstElement() as WallType;
-
-            //get wall
-            var wType = new FilteredElementCollector(doc)
-                .OfClass(typeof(WallType))
-                .Cast<WallType>().FirstOrDefault(q => q.Name == "CW 102-50-100p");
-          
-            //get element and cast the ID
-            var wallType1 = (WallType)doc.GetElement(wType.Id);
-            
             //set unit to millimeters
             var unit = UnitTypeId.Millimeters;
 
-            //wall length
-            //var length = UnitUtils.ConvertToInternalUnits(6000, unit);
 
-            //wall height
-            var height = UnitUtils.ConvertToInternalUnits(2400, unit);
+            var point1 = 9000;
+            var point2 = 3600;
+            
+            var height = 2400;
 
-            //wall offset
-            var offset = UnitUtils.ConvertToInternalUnits(0, unit);
+            var pt1 = point1 / 2;
+            var pt2 = point2 / 2;
 
             //point1
-            var ptX = UnitUtils.ConvertToInternalUnits(6000, unit);
+            var ptX = UnitUtils.ConvertToInternalUnits(pt1, unit);
 
             //point 2
-            var ptY = UnitUtils.ConvertToInternalUnits(1800, unit);
+            var ptY = UnitUtils.ConvertToInternalUnits(pt2, unit);
 
             //z point
             var ptZ = UnitUtils.ConvertToInternalUnits(0, unit);
+
+            
 
             // wall width / 2
             var wallWidth = UnitUtils.ConvertToInternalUnits(264, unit);
 
             var wallWd = wallWidth / 2;
 
-            try
-            {
-                var tr = new Transaction(doc);
+            var wallType = "CW 102-50-100p";
+            var level = "FFL";
+
+            var tr = new Transaction(doc);
+
                 using (tr)
                 {
-                    tr.Start("CreateWall");
+                    try
+                    {
+                        tr.Start("CreateWall");
 
-                    //create points
-                    var start1 = new XYZ(-ptX,ptY - wallWd, ptZ);
-                    var end1 = new XYZ(ptX, ptY - wallWd, ptZ);
-                    
-                    var start2 = new XYZ(ptX,-ptY + wallWd, ptZ);
-                    var end2 = new XYZ(-ptX,-ptY + wallWd, ptZ);
+                        //create points
+                        var start1 = new XYZ(-ptX, ptY - wallWd, ptZ);
+                        var end1 = new XYZ(ptX, ptY - wallWd, ptZ);
 
-                    var start3 = new XYZ(ptX - wallWd, ptY, ptZ);
-                    var end3 = new XYZ(ptX - wallWd, -ptY, ptZ);
+                        var start2 = new XYZ(ptX, -ptY + wallWd, ptZ);
+                        var end2 = new XYZ(-ptX, -ptY + wallWd, ptZ);
 
-                    var start4 = new XYZ(-ptX + wallWd, -ptY, ptZ);
-                    var end4 = new XYZ(-ptX + wallWd, ptY, ptZ);
+                        var start3 = new XYZ(ptX - wallWd, ptY, ptZ);
+                        var end3 = new XYZ(ptX - wallWd, -ptY, ptZ);
 
+                        var start4 = new XYZ(-ptX + wallWd, -ptY, ptZ);
+                        var end4 = new XYZ(-ptX + wallWd, ptY, ptZ);
 
-                    //create line
-                    var geomLine1 = Line.CreateBound(start1, end1);
-                    var geomLine2 = Line.CreateBound(start2, end2);
-                    var geomLine3 = Line.CreateBound(start3, end3);
-                    var geomLine4 = Line.CreateBound(start4, end4);
+                        //create line
+                        var line1 = Line.CreateBound(start1, end1);
+                        var line2 = Line.CreateBound(start2, end2);
+                        var line3 = Line.CreateBound(start3, end3);
+                        var line4 = Line.CreateBound(start4, end4);
 
-                    //create wall
-                    var myWall = Wall.Create(doc, geomLine1, wallType1.Id, lvlId, height, offset, false, false);
-
-                    //set location line to Finish Face Exterior
-                    myWall.get_Parameter(BuiltInParameter.WALL_KEY_REF_PARAM).Set(2);
-
-                    var myWall2 = Wall.Create(doc, geomLine2, wallType1.Id, lvlId, height, offset, false, false);
-                    
-                    //set location line to Finish Face Exterior
-                    myWall2.get_Parameter(BuiltInParameter.WALL_KEY_REF_PARAM).Set(2);
-
-                    var myWall3 = Wall.Create(doc, geomLine3, wallType1.Id, lvlId, height, offset, false, false);
-
-                    //set location line to Finish Face Exterior
-                    myWall3.get_Parameter(BuiltInParameter.WALL_KEY_REF_PARAM).Set(2);
-
-                    var myWall4 = Wall.Create(doc, geomLine4, wallType1.Id, lvlId, height, offset, false, false);
-
-                    //set location line to Finish Face Exterior
-                    myWall4.get_Parameter(BuiltInParameter.WALL_KEY_REF_PARAM).Set(2);
-
-
+                        //create rectangle wall
+                        Helpers.createWall(doc, line1, height, wallType, level);
+                        Helpers.createWall(doc, line2, height, wallType, level);
+                        Helpers.createWall(doc, line3, height, wallType, level);
+                        Helpers.createWall(doc, line4, height, wallType, level);
+                    }
+                    catch (Exception e)
+                    {
+                        message = e.Message;
+                        tr.RollBack();
+                        return Result.Failed;
+                    }
+                   
                     //commit transaction                                   
                     tr.Commit();
                 }
-            }
-            catch (Exception e)
-            {
-                message = e.Message;
-                return Result.Failed;
-            }
-
+            
             return Result.Succeeded;
         }
     }

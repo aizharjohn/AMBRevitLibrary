@@ -28,17 +28,16 @@ namespace AMBRevitLibrary
             var pt2 = UnitUtils.ConvertToInternalUnits(3300, unit);
             var pt3 = UnitUtils.ConvertToInternalUnits(7500, unit);
             var pt4 = UnitUtils.ConvertToInternalUnits(1800, unit);
-            
-            var rfl = UnitUtils.ConvertToInternalUnits(3000, unit);
-            var gfl = UnitUtils.ConvertToInternalUnits(-500, unit);
-            var ffl = UnitUtils.ConvertToInternalUnits(0, unit);
 
-            var roofLevel = rfl;
-            var groundLevel = gfl;
-            var finishLevel = ffl;
+
+            var gfl = -500;
+            var ffl = 0;
+            var rfl = 3000;
+            var fcl = 2400;
 
             var gflName = "GFL";
             var fflName = "FFL";
+            var fclName = "FCL";
             var rflName = "RFL";
 
             String[] gridNames = {"1", "2", "A", "B" };
@@ -59,13 +58,16 @@ namespace AMBRevitLibrary
                     //CREATE LEVELS
 
                     //gf level
-                    Helpers.createLevel(document, groundLevel, gflName);
+                    Helpers.createLevel(document, gfl, gflName);
 
                     //finish floor level
-                    Helpers.createLevel(document, finishLevel, fflName);
+                    Helpers.createLevel(document, ffl, fflName);
+
+                    //ceiling level
+                    Helpers.createLevel(document, fcl, fclName);
 
                     //roof level
-                    Helpers.createLevel(document, roofLevel, rflName);
+                    Helpers.createLevel(document, rfl, rflName);
 
                     //CREATE GRIDS
 

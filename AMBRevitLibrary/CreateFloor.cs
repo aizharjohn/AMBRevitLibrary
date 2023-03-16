@@ -28,13 +28,13 @@ namespace AMBRevitLibrary
             var doc = uidoc.Document;
 
             //floor dimensions
-            var floorLength = 24000;
-            var floorWidth = 8000;
+            var length = 24000;
+            var width = 8000;
 
             //convert units to millimeters
-            var unit = UnitTypeId.Millimeters;
-            var width = UnitUtils.ConvertToInternalUnits(floorWidth / 2, unit);
-            var length = UnitUtils.ConvertToInternalUnits(floorLength / 2, unit);
+            //var unit = UnitTypeId.Millimeters;
+            //var width = UnitUtils.ConvertToInternalUnits(floorWidth / 2, unit);
+            //var length = UnitUtils.ConvertToInternalUnits(floorLength / 2, unit);
 
             //name of level
             var myLevel = "FFL";
@@ -59,7 +59,6 @@ namespace AMBRevitLibrary
                     message = e.Message;
                     tr.RollBack();
                     return Result.Failed;
-                    
                 }
             }
 

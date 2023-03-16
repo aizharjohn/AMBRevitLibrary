@@ -1,33 +1,32 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using Autodesk.Revit.Attributes;
-//using Autodesk.Revit.DB;
-//using Autodesk.Revit.UI;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace AMBRevitLibrary
-//{
-//    public static class Active
-//    {
-//        public static ExternalCommandData commandData;
-       
+using Autodesk.Revit.Attributes;
+using Autodesk.Revit;
+using Autodesk.Revit.UI;
+using Autodesk.Revit.DB;
 
-//        //get application
-//        var uiApp = commandData.Application;
-//        var app = uiApp.Application;
+namespace AMBRevitLibrary
+{
+    internal static class Active
+    {
+        public static ExternalCommandData doc;
 
-//        //get UI document
-//        var uiDoc = commandData.Application.ActiveUIDocument;
+        public static ExternalCommandData GetCommandData()
+        {
+            //get application
+            var uiApp = Active.doc.Application;
+            var app = uiApp.Application;
 
-//        //get document
-//        var doc = uiDoc.Document;
+            //get UI document
+            var uiDoc = uiApp.ActiveUIDocument;
 
+            var doc = uiDoc.Document;
 
-//        public static App Application
-//        {
-
-//        }
-//    }
-//}
+            return Active.doc;
+        }
+    }
+}
