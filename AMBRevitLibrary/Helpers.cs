@@ -51,7 +51,7 @@ namespace AMBRevitLibrary
             return gridLine;
         }
 
-        public static Floor createArchitecturalFloor(Document doc, double point1, double point2, string floorType, string level) 
+        public static Floor createArchitecturalFloor(Document doc, double length, double width, string floorType, string level) 
         {
             //grab levels
             var collLevels = new FilteredElementCollector(doc)
@@ -82,14 +82,14 @@ namespace AMBRevitLibrary
 
             //convert units to millimeters
             var unit = UnitTypeId.Millimeters;
-            var length = UnitUtils.ConvertToInternalUnits(point1 / 2, unit);
-            var width = UnitUtils.ConvertToInternalUnits(point2 / 2, unit);
+            var point1 = UnitUtils.ConvertToInternalUnits(length / 2, unit);
+            var point2 = UnitUtils.ConvertToInternalUnits(width / 2, unit);
 
             //create lines from points
-            var pt1 = new XYZ(-length, width, 0);
-            var pt2 = new XYZ(length, width, 0);
-            var pt3 = new XYZ(length, -width, 0);
-            var pt4 = new XYZ(-length, -width, 0);
+            var pt1 = new XYZ(-point1, point2, 0);
+            var pt2 = new XYZ(point1, point2, 0);
+            var pt3 = new XYZ(point1, -point2, 0);
+            var pt4 = new XYZ(-point1, -point2, 0);
 
             //initiate curveloop
             var profile = new CurveLoop();
@@ -112,7 +112,7 @@ namespace AMBRevitLibrary
 
         }
 
-        public static Wall createWall(Document doc, Line line, Int32 height, string wallType, string level)
+        public static Wall createWall(Document doc, Line line, double height, string wallType, string level)
         {
             //grab levels
             var collLevels = new FilteredElementCollector(doc)
@@ -160,6 +160,63 @@ namespace AMBRevitLibrary
             wall.get_Parameter(BuiltInParameter.WALL_KEY_REF_PARAM).Set(2);
 
             return wall;
+        }
+
+        public static Ceiling createCeiling(Document doc, double length, double width, string ceilingType, string level)
+        {
+            //grab levels
+            var collLevels = new FilteredElementCollector(doc)
+                .WhereElementIsNotElementType()
+                .OfCategory(BuiltInCategory.INVALID)
+                .OfClass(typeof(Level));
+
+            //get level
+            var lvl = new FilteredElementCollector(doc)
+                .OfClass(typeof(Level))
+                .Cast<Level>().FirstOrDefault(q => q.Name == level);
+
+            var lvlId = lvl.Id;
+
+            //grab all ceiling
+            var colCeil = new FilteredElementCollector(doc)
+                .WhereElementIsNotElementType()
+                .OfCategory(BuiltInCategory.INVALID)
+                .OfClass(typeof(Ceiling));
+
+            //get ceiling
+            var ceiling = new FilteredElementCollector(doc)
+                .OfClass(typeof(CeilingType))
+                .Cast<CeilingType>().FirstOrDefault(q => q.Name == ceilingType);
+
+            //get element and cast the ID
+            var ceilId = (CeilingType)doc.GetElement(ceiling.Id);
+
+            //convert units to millimeters
+            var unit = UnitTypeId.Millimeters;
+            var point1 = UnitUtils.ConvertToInternalUnits(length / 2, unit);
+            var point2 = UnitUtils.ConvertToInternalUnits(width / 2, unit);
+
+            var pt1 = new XYZ(-point1, point2, 0);
+            var pt2 = new XYZ(point1, point2, 0);
+            var pt3 = new XYZ(point1, -point2, 0);
+            var pt4 = new XYZ(-point1, -point2, 0);
+
+            var profile = new CurveLoop();
+
+            var line1 = Line.CreateBound(pt1, pt2);
+            var line2 = Line.CreateBound(pt2, pt3);
+            var line3 = Line.CreateBound(pt3, pt4);
+            var line4 = Line.CreateBound(pt4, pt1);
+
+            profile.Append(line1);
+            profile.Append(line2);
+            profile.Append(line3);
+            profile.Append(line4);
+
+            //create ceiling
+            var createCeiling = Ceiling.Create(doc, new List<CurveLoop> { profile }, ceilId.Id, lvlId);
+
+            return createCeiling;
         }
     }
 }

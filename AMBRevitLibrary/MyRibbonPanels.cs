@@ -339,7 +339,7 @@ namespace AMBRevitLibrary
                 ToolTip = "Export to DWG",
                 LongDescription = "Exports all your Revit sheets to DWG format",
                 Image = imgSrc,
-                LargeImage = imgSrc
+                LargeImage = imgSrc,
             };
 
             //create the button data

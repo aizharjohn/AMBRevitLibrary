@@ -31,11 +31,6 @@ namespace AMBRevitLibrary
             var length = 24000;
             var width = 8000;
 
-            //convert units to millimeters
-            //var unit = UnitTypeId.Millimeters;
-            //var width = UnitUtils.ConvertToInternalUnits(floorWidth / 2, unit);
-            //var length = UnitUtils.ConvertToInternalUnits(floorLength / 2, unit);
-
             //name of level
             var myLevel = "FFL";
 
